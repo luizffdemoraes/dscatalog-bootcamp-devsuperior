@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +23,13 @@ public class CategoryService {
 
 	/*
 	 * Garante que o metodo vai executar uma transação com banco de dados e não vai
-	 * travar evita um lock no banco de dados
-	 * Implementação com expressão Lambda stream converter sua coleção, stream um
-	 * recurso para trabalhar com funções de alta ordem inclusive lambda para
-	 * aplicar transformações map aplica um função transforma cada elemento da lista
-	 * em outra coisa ela aplica uma função a cada elemento. collec transforma uma
-	 * stream em uma lista
+	 * travar evita um lock no banco de dados Implementação com expressão Lambda
+	 * stream converter sua coleção, stream um recurso para trabalhar com funções de
+	 * alta ordem inclusive lambda para aplicar transformações map aplica um função
+	 * transforma cada elemento da lista em outra coisa ela aplica uma função a cada
+	 * elemento. collec transforma uma stream em uma lista
 	 */
-	
+
 	@Transactional(readOnly = true)
 	public List<CategoryDTO> findAll() {
 		List<Category> list = repository.findAll();
@@ -58,12 +59,32 @@ public class CategoryService {
 		return new CategoryDTO(entity);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public CategoryDTO insert(CategoryDTO dto) {
 		Category entity = new Category();
 		entity.setName(dto.getName());
 		entity = repository.save(entity);
 		return new CategoryDTO(entity);
+	}
+
+	/*
+	 * Diferenda de findById e getOne. findById: Efetiva o acesso ao banco de dados
+	 * ele traz do banco de dados. getOne: Ele não toca no banco de dados ele
+	 * instancia um objeto provisorio e com o id do objeto so quando mandar salvar
+	 * ele acessa o banco.
+	 */
+
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO dto) {
+		try {
+		Category entity = repository.getOne(id);
+		entity.setName(dto.getName());
+		entity = repository.save(entity);
+		return new CategoryDTO(entity);
+		}
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}
 	}
 
 }

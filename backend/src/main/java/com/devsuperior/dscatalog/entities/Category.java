@@ -1,28 +1,39 @@
 package com.devsuperior.dscatalog.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 //javax é a especificação
-
 
 @Entity
 @Table(name = "tb_category")
 public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/* Padrão para que o objeto possa ser convertido em bytes para que possa ser 
-	 * gravado em arquivos para poder passar nas redes. Hoje é utilizado como boa medida.
+	/*
+	 * Padrão para que o objeto possa ser convertido em bytes para que possa ser
+	 * gravado em arquivos para poder passar nas redes. Hoje é utilizado como boa
+	 * medida. Controlar armazenamento UTC sem especificar o time zone
 	 */
-	
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant createdAt;
+
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant updatedAt;
+
 	public Category() {
 	}
 
@@ -46,8 +57,33 @@ public class Category implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
 
-	//Compara dois objeto verifica se são iguais. Porem por conhecidencia dois objetos podem gerar o mesmo número
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+	
+	/*
+	 *  Criação de um método auxiliar para sempre que mandar: 
+	 *  - salvar ele use o createdAt. 
+	 *  - atualizar ele use o updatedAt.
+	 */
+	
+	@PrePersist
+	public void prePersist() {
+		createdAt = Instant.now();
+	}
+	@PreUpdate
+	public void preUpdate() {
+		updatedAt = Instant.now();
+	}
+
+	// Compara dois objeto verifica se são iguais. Porem por conhecidencia dois
+	// objetos podem gerar o mesmo número
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -56,7 +92,7 @@ public class Category implements Serializable {
 		return result;
 	}
 
-	//Compara dois objetos verifica se são iguais, no caso será utilizado o id.
+	// Compara dois objetos verifica se são iguais, no caso será utilizado o id.
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -73,12 +109,5 @@ public class Category implements Serializable {
 			return false;
 		return true;
 	}
-
-	
-
-	
-	
-	
-	
 
 }

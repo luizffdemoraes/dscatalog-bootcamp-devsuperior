@@ -1,8 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -26,14 +24,15 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository repository;
 
-	/* Método para retornar todos registros do banco de dados.
-	 * Garante que o metodo vai executar uma transação com banco de dados e não vai
-	 * travar evita um lock no banco de dados Implementação com expressão Lambda
-	 * stream converter sua coleção, stream um recurso para trabalhar com funções de
-	 * alta ordem inclusive lambda para aplicar transformações map aplica um função
-	 * transforma cada elemento da lista em outra coisa ela aplica uma função a cada
-	 * elemento. collec transforma uma stream em uma lista
-	 * alteração do metodo de listagem para paginação o page já é um stream
+	/*
+	 * Método para retornar todos registros do banco de dados. Garante que o metodo
+	 * vai executar uma transação com banco de dados e não vai travar evita um lock
+	 * no banco de dados Implementação com expressão Lambda stream converter sua
+	 * coleção, stream um recurso para trabalhar com funções de alta ordem inclusive
+	 * lambda para aplicar transformações map aplica um função transforma cada
+	 * elemento da lista em outra coisa ela aplica uma função a cada elemento.
+	 * collec transforma uma stream em uma lista alteração do metodo de listagem
+	 * para paginação o page já é um stream
 	 */
 
 	@Transactional(readOnly = true)
@@ -68,7 +67,7 @@ public class CategoryService {
 		return new CategoryDTO(entity);
 	}
 
-	@Transactional 
+	@Transactional
 	public CategoryDTO insert(CategoryDTO dto) {
 		Category entity = new Category();
 		entity.setName(dto.getName());

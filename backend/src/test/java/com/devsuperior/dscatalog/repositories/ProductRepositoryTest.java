@@ -4,12 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import static org.assertj.core.api.Assertions.*;
+
+
 
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.tests.Factory;
@@ -30,6 +34,34 @@ public class ProductRepositoryTest {
 		nonExistingId = 1000L;
 		countTotalProducts = 25L;
 	}
+	
+	
+	@Test
+	public void returnOptionalNonEmptyWhenIdExists(){
+		//Ação
+		Optional<Product> possible = repository.findById(exintingId);
+		
+		//Verificação
+		assertThat(possible).isPresent();
+		assertThat(possible.get().getId().equals(1L));
+		Assertions.assertNotNull(possible);
+		Assertions.assertTrue(possible.isPresent());
+		Assertions.assertEquals(possible.get().getId(), 1L);
+	}
+	
+	@Test
+	public void returnOptionalEmptyWhenIdDoesNotExist(){
+		//Ação
+		Optional<Product> possible = repository.findById(nonExistingId);
+		
+		//Verificação
+		Assertions.assertFalse(possible.isPresent());
+		Assertions.assertTrue(possible.isEmpty());
+		
+		
+	}
+	
+	
 	
 	@Test
 	public void saveShouldPersistWithAutoincrementWhenIdIsNull() {

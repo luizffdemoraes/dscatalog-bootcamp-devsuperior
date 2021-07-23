@@ -15,6 +15,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.devsuperior.dscatalog.repositories.ProductRepository;
+import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTest {
@@ -40,6 +41,21 @@ public class ProductServiceTest {
 		// Ao criar um mock e necessário configurar o comportamento simulado dele.
 		doNothing().when(repository).deleteById(existingId);
 		doThrow(EmptyResultDataAccessException.class).when(repository).deleteById(nonExistingId);
+	}
+	
+	@Test
+	public void deleteShouldThrowResourceNotFoundExceptionWhenIdNotExists() {
+		
+		
+		//Verificação
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			//Ação
+			service.delete(nonExistingId);
+		});
+		
+		//Verificação
+		verify(repository, times(1)).deleteById(nonExistingId);
+		
 	}
 	
 	@Test

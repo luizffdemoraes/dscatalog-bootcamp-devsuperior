@@ -97,6 +97,7 @@ public class ProductService {
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ProductDTO(entity);
+
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
 		}

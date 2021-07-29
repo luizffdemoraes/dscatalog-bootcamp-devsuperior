@@ -89,32 +89,30 @@ public class ProductServiceTest {
 		
 		Mockito.when(categoryRepository.getOne(existingId)).thenReturn(category);
 		Mockito.when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
-		
-		doThrow(EntityNotFoundException.class).when(repository).getOne(nonExistingId);
-		
+
 		doNothing().when(repository).deleteById(existingId);
 		doThrow(EmptyResultDataAccessException.class).when(repository).deleteById(nonExistingId);
 		doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
 	}
 	
 	//Verificar erro de id
-//	@Test
-//	public void updateShouldReturnProductDTOWhenIdExists() {
-//		//retornar um ProductDTO quando o id existir
-//		ProductDTO productDTO = Factory.createProductDTO(); //Já esta instanciado
-//		
-//		//Ação
-//		ProductDTO result = service.update(productDTO.getId(), productDTO);
-//		
-//		//Verificação
-//		Assertions.assertNotNull(result);
-//		
-//	}
-	
+	@Test
+	public void updateShouldReturnProductDTOWhenIdExists() {
+		//retornar um ProductDTO quando o id existir
+	//	ProductDTO productDTO = Factory.createProductDTO(); //Já esta instanciado
+
+		//Ação
+		ProductDTO result = service.update(existingId, productDTO);
+
+		// Verificação
+ 		Assertions.assertNotNull(result);
+
+	}
+
 	@Test
 	public void updateShouThrowlResourceNotFoundExceptionWhenIdDoesNotExist() {
 		//lançar ResourceNotFoundException quando o id não existir
-//		ProductDTO productDTO = Factory.createProductDTO(); Já esta instanciado
+		//ProductDTO productDTO = Factory.createProductDTO(); //Já esta instanciado
 		
 		//Verificação
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {

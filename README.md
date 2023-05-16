@@ -1,9 +1,11 @@
-# DSCatalog
+# Bootcamp Spring 3.0 - DSCatalog
 
 ## UML Project
 ![UML 1](/backend//images/dscatalog.png)
 
-Bootcamp Spring 3.0 - Cap. 01
+<br/>
+
+Cap. 01
 <br/>CRUD<br/>
 =================
 <!--ts-->
@@ -31,7 +33,9 @@ Criar monorepo Git
 * Associações entre entidades (N-N)
 <!--te-->
 
-Bootcamp Spring 3.0 - Cap. 02
+<br/>
+
+Cap. 02
 <br/>Testes automatizados no back end
 <br/>
 =================
@@ -58,7 +62,25 @@ Bootcamp Spring 3.0 - Cap. 02
     * @MockMvc
 <!--te-->
 
+<br/>
 
-
+Cap. 03
+<br/>Validação e segurança
+<br/>
+=================
+<!--ts-->
+* Modelo de dados de usuários e perfis
+* Validação com Bean Validation
+    * Annotations
+    * Customizando a resposta HTTP
+    * Validações personalizadas com acesso a banco
+* Autenticação e autorização
+    * Spring Security
+    * OAuth 2.0
+    * Token JWT
+    * Autorização de rotas por perfil
+* Dicas para Postman
+* Variáveis de ambiente no projeto com coalescência
+<!--te-->
 
 

@@ -113,12 +113,9 @@ public class ProductService {
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
-			
 		} catch (DataIntegrityViolationException e) {
-
 			throw new DataBaseException("Integrity violation");
 		}
-
 	}
 	
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {

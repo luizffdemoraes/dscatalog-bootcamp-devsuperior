@@ -27,6 +27,7 @@ public class User implements UserDetails, Serializable {
     private String email;
     private String password;
 
+    // Forçar que sempre que buscar um usuário já virá or perfis de usuário "Roles"
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_user_role",
             joinColumns = @JoinColumn(name = "user_id"),

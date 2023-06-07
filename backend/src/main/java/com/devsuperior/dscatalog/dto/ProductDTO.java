@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 public class ProductDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
+
+	// Anotações do ponto de vista de sintaxe
 	@Size(min = 5, max = 60, message = "Deve ter entre 5 e 60 caracteres")
 	@NotBlank(message = "Campo requerido")
 	private String name;

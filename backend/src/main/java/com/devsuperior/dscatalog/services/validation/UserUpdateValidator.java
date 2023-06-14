@@ -31,12 +31,17 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
     @Override
     public boolean isValid(UserUpdateDTO dto, ConstraintValidatorContext context) {
 
+        // Logica para pegar a variavel id da URL
         @SuppressWarnings("unchecked")
         var uriVars = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         long userId = Long.parseLong(uriVars.get("id"));
 
         List<FieldMessage> list = new ArrayList<>();
 
+        /*
+            Verificar tentativa de atualização de e-mail já existente em outro usuário,
+            por meio da valida do id da url e o id obtido na consulta do e-mail.
+         */
         User user = repository.findByEmail(dto.getEmail());
         if (user != null && userId != user.getId()) {
             list.add(new FieldMessage("email", "Email já existe"));

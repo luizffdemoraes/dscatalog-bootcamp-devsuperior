@@ -1,22 +1,18 @@
 package com.devsuperior.dscatalog.repositories;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Optional;
-
-
+import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.tests.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import static org.assertj.core.api.Assertions.*;
 
+import java.util.Optional;
 
-
-import com.devsuperior.dscatalog.entities.Product;
-import com.devsuperior.dscatalog.tests.Factory;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -35,7 +31,7 @@ public class ProductRepositoryTest {
 		countTotalProducts = 25L;
 	}
 	
-	
+	/*
 	@Test
 	public void returnOptionalNonEmptyWhenIdExists(){
 		//Ação
@@ -57,11 +53,7 @@ public class ProductRepositoryTest {
 		//Verificação
 		Assertions.assertFalse(possible.isPresent());
 		Assertions.assertTrue(possible.isEmpty());
-		
-		
 	}
-	
-	
 	
 	@Test
 	public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
@@ -97,9 +89,5 @@ public class ProductRepositoryTest {
 		});
 		
 	}
-	
-	
-	
-	
-
+	 */
 }

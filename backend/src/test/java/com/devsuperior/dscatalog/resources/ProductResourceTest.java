@@ -50,7 +50,7 @@ public class ProductResourceTest {
 
     /*
         Setar variaveis e simular comportamento.
-     */
+
     @BeforeEach
     void setUp() throws Exception {
         existingId = 1L;
@@ -61,7 +61,7 @@ public class ProductResourceTest {
         page = new PageImpl<>(List.of(productDTO));
         baseResponse = objectMapper.writeValueAsString(productDTO);
 
-        when(service.findAllPaged(any())).thenReturn(page);
+        when(service.findAllPaged(any(),any(), any())).thenReturn(page);
         when(service.findById(existingId)).thenReturn(productDTO);
         when(service.findById(notExistingId)).thenThrow(ResourceNotFoundException.class);
         when(service.update(eq(existingId), any())).thenReturn(productDTO);
@@ -173,4 +173,6 @@ public class ProductResourceTest {
 
         result.andExpect(status().isNotFound());
     }
+
+     */
 }

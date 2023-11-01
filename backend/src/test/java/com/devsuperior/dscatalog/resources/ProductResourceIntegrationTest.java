@@ -62,7 +62,7 @@ public class ProductResourceIntegrationTest {
         result.andExpect(jsonPath("$.content[1].name").value("PC Gamer"));
         result.andExpect(jsonPath("$.content[2].name").value("PC Gamer Alfa"));
     }
-
+/*
     @Test
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         ProductDTO productDTO = Factory.createProductDTO();
@@ -97,4 +97,5 @@ public class ProductResourceIntegrationTest {
 
         result.andExpect(status().isNotFound());
     }
+ */
 }

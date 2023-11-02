@@ -24,114 +24,115 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-	@Autowired
-	private ProductRepository repository;
-	
-	@Autowired
-	private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductRepository repository;
 
-	/*
-	 * Método para retornar todos registros do banco de dados. Garante que o metodo
-	 * vai executar uma transação com banco de dados e não vai travar evita um lock
-	 * no banco de dados Implementação com expressão Lambda stream converter sua
-	 * coleção, stream um recurso para trabalhar com funções de alta ordem inclusive
-	 * lambda para aplicar transformações map aplica um função transforma cada
-	 * elemento da lista em outra coisa ela aplica uma função a cada elemento.
-	 * collec transforma uma stream em uma lista alteração do metodo de listagem
-	 * para paginação o page já é um stream
-	 */
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
-		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getOne(categoryId));
-		Page<Product> page = repository.find(categories, name, pageable);
-		repository.findProductsWithCategories(page.getContent());
-		return page.map(x -> new ProductDTO(x, x.getCategories()));
-	}
+    /*
+     * Método para retornar todos registros do banco de dados. Garante que o metodo
+     * vai executar uma transação com banco de dados e não vai travar evita um lock
+     * no banco de dados Implementação com expressão Lambda stream converter sua
+     * coleção, stream um recurso para trabalhar com funções de alta ordem inclusive
+     * lambda para aplicar transformações map aplica um função transforma cada
+     * elemento da lista em outra coisa ela aplica uma função a cada elemento.
+     * collec transforma uma stream em uma lista alteração do metodo de listagem
+     * para paginação o page já é um stream
+     */
 
-// Conversão de lista de Categoria para uma Lista de Categoria Dto com função Lambda
-// return list.stream().map(x -> new ProductDTO(x)).collect(Collectors.toList());
-//	
-//		Uma forma de converter a lista de category
-//		List<ProductDTO> listDto = new ArrayList<>();
-//		for(Product cat : list) {
-//			listDto.add(new ProductDTO(cat));
-//		}
-//		return listDto;
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
+        List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getReferenceById(categoryId));
+        Page<Product> page = repository.find(categories, name, pageable);
+        repository.findProductsWithCategories(page.getContent());
+        return page.map(x -> new ProductDTO(x, x.getCategories()));
+    }
 
-	/*
-	 * criar metodo para busca de id -> Optional foi criado para não trabalhar com
-	 * valor nulo a partir do Java 8 -> .get do Optional obtem o objeto dentro do
-	 * Optional -> .orElse Tentar obter o objeto que seria o get, se o objeto não
-	 * estiver presente no Optional você pode retornar outra coisa um objeto
-	 * alternativo, nulo exception -> orElseThrow() permite definir uma chamada de
-	 * exception uma função lambda
-	 */
+    /*
+     * Conversão de lista de Categoria para uma Lista de Categoria Dto com função Lambda
+     * return list.stream().map(x -> new ProductDTO(x)).collect(Collectors.toList());
+     * Uma forma de converter a lista de category
+     * List<ProductDTO> listDto = new ArrayList<>();
+     * for(Product cat : list) {
+     * 	listDto.add(new ProductDTO(cat));
+     * }
+     * return listDto;
+     */
 
-	@Transactional(readOnly = true)
-	public ProductDTO findById(Long id) {
-		Optional<Product> obj = repository.findById(id);
-		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new ProductDTO(entity, entity.getCategories());
-	}
 
-	@Transactional
-	public ProductDTO insert(ProductDTO dto) {
-		Product entity = new Product();
-		copyDtoToEntity(dto, entity);
-		
-		entity = repository.save(entity);
-		return new ProductDTO(entity);
-	}
+    /*
+     * criar metodo para busca de id -> Optional foi criado para não trabalhar com
+     * valor nulo a partir do Java 8 -> .get do Optional obtem o objeto dentro do
+     * Optional -> .orElse Tentar obter o objeto que seria o get, se o objeto não
+     * estiver presente no Optional você pode retornar outra coisa um objeto
+     * alternativo, nulo exception -> orElseThrow() permite definir uma chamada de
+     * exception uma função lambda
+     */
 
-	/*
-	 * Diferenda de findById e getOne. findById: Efetiva o acesso ao banco de dados
-	 * ele traz do banco de dados. getOne: Ele não toca no banco de dados ele
-	 * instancia um objeto provisorio e com o id do objeto so quando mandar salvar
-	 * ele acessa o banco.
-	 */
+    @Transactional(readOnly = true)
+    public ProductDTO findById(Long id) {
+        Optional<Product> obj = repository.findById(id);
+        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        return new ProductDTO(entity, entity.getCategories());
+    }
 
-	@Transactional
-	public ProductDTO update(Long id, ProductDTO dto) {
-		try {
-			Product entity = repository.getOne(id);
-			copyDtoToEntity(dto, entity);
-			entity = repository.save(entity);
-			return new ProductDTO(entity);
+    @Transactional
+    public ProductDTO insert(ProductDTO dto) {
+        Product entity = new Product();
+        copyDtoToEntity(dto, entity);
 
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Id not found " + id);
-		}
-	}
+        entity = repository.save(entity);
+        return new ProductDTO(entity);
+    }
 
-	
+    /*
+     * Diferenda de findById e getOne. findById: Efetiva o acesso ao banco de dados
+     * ele traz do banco de dados. getOne: Ele não toca no banco de dados ele
+     * instancia um objeto provisorio e com o id do objeto so quando mandar salvar
+     * ele acessa o banco.
+     */
 
-	// captura de exception para isso não colocamos @Transactional
-	// captura exception de integridade quando deletamos algo que não podemos
-	public void delete(Long id) {
-		try {
-			repository.deleteById(id);
+    @Transactional
+    public ProductDTO update(Long id, ProductDTO dto) {
+        try {
+            Product entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ProductDTO(entity);
 
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Id not found " + id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DataBaseException("Integrity violation");
-		}
-	}
-	
-	private void copyDtoToEntity(ProductDTO dto, Product entity) {
-		
-		entity.setName(dto.getName());
-		entity.setDescription(dto.getDescription());
-		entity.setDate(dto.getDate());
-		entity.setImgUrl(dto.getImgUrl());
-		entity.setPrice(dto.getPrice());
-		
-		entity.getCategories().clear();
-		for(CategoryDTO catDto : dto.getCategories()) {
-			Category category = categoryRepository.getOne(catDto.getId());
-			entity.getCategories().add(category);
-		}
-	}
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        }
+    }
+
+
+    // captura de exception para isso não colocamos @Transactional
+    // captura exception de integridade quando deletamos algo que não podemos
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Integrity violation");
+        }
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
+
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPrice(dto.getPrice());
+
+        entity.getCategories().clear();
+        for (CategoryDTO catDto : dto.getCategories()) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            entity.getCategories().add(category);
+        }
+    }
 
 }

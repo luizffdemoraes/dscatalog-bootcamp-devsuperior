@@ -85,11 +85,11 @@ public class ProductServiceTest {
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty()); // empty instancia um Optional vazio
 		
 		//Simular o comportamento do update com id existente e inexistente realizando GetOne
-		Mockito.when(repository.getOne(existingId)).thenReturn(product);
-		Mockito.when(repository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
+		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 		
-		Mockito.when(categoryRepository.getOne(existingId)).thenReturn(category);
-		Mockito.when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		Mockito.when(categoryRepository.getReferenceById(existingId)).thenReturn(category);
+		Mockito.when(categoryRepository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
 		doNothing().when(repository).deleteById(existingId);
 		doThrow(EmptyResultDataAccessException.class).when(repository).deleteById(nonExistingId);
